@@ -1,0 +1,50 @@
+<template>
+  <style>
+    @font-face { font-family: 'Public Sans'; font-weight: 400; src: url('assets/fonts/public-sans-400.woff2') format('woff2'); }
+    @font-face { font-family: 'Public Sans'; font-weight: 600; src: url('assets/fonts/public-sans-600.woff2') format('woff2'); }
+    #root { position: absolute; inset: 0; background: #f2f4f6; font-family: 'Public Sans', sans-serif; color: #1c2430; overflow: hidden; }
+    #hook-mail {
+      position: absolute; left: 300px; top: 130px; width: 1320px; height: 820px;
+      background: #ffffff; border: 1px solid #d8dde3; border-radius: 6px; padding: 64px 80px;
+    }
+    #hook-mail .meta { font-size: 28px; line-height: 1.6; color: #566170; }
+    #hook-mail .meta b { color: #1c2430; font-weight: 600; }
+    #hook-mail .rule { height: 1px; background: #d8dde3; margin: 28px 0 32px; }
+    #hook-subject { font-size: 56px; font-weight: 600; letter-spacing: -0.01em; line-height: 1.2; }
+    #hook-body { margin-top: 44px; font-size: 40px; line-height: 1.55; }
+    #hook-body .w { color: #c3cad2; }
+    #hook-body .last { font-weight: 600; }
+  </style>
+  <div id="root" data-composition-id="hook" data-width="1920" data-height="1080">
+    <div id="hook-mail">
+      <p class="meta">From&nbsp;&nbsp;<b>Carla Bakker</b> · Management board</p>
+      <p class="meta">To&nbsp;&nbsp;<b>IT</b></p>
+      <div class="rule"></div>
+      <h1 id="hook-subject">AI Act: where do we stand?</h1>
+      <div id="hook-body">
+        <p><span class="w">Which</span> <span class="w">AI</span> <span class="w">tools</span> <span class="w">do</span> <span class="w">we</span> <span class="w">use?</span></p>
+        <p><span class="w">How</span> <span class="w">risky</span> <span class="w">are</span> <span class="w">they?</span></p>
+        <p><span class="w">Is</span> <span class="w">everyone</span> <span class="w">trained?</span></p>
+        <p class="last"><span class="w">Can</span> <span class="w">you</span> <span class="w">tell</span> <span class="w">us</span> <span class="w">by</span> <span class="w">Friday?</span></p>
+      </div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const tl = gsap.timeline({ paused: true });
+      const words = gsap.utils.toArray('#hook-body .w');
+      gsap.set('#hook-mail', { transformOrigin: '50% 50%', x: 0, y: 0, scale: 1, filter: 'blur(0px)' });
+      gsap.set(words, { color: '#c3cad2' });
+      // Each line reads in, word by word, grey to ink.
+      words.forEach((w, i) => {
+        const line = w.parentElement;
+        const lineIndex = Array.from(line.parentElement.children).indexOf(line);
+        tl.to(w, { color: '#1c2430', duration: 0.12, ease: 'none' }, 0.25 + i * 0.08 + lineIndex * 0.18);
+      });
+      // Push toward the deadline line, then whip out to the left.
+      tl.to('#hook-mail', { scale: 1.45, x: 440, y: -170, duration: 1.1, ease: 'power2.inOut' }, 3.0);
+      tl.to('#hook-mail', { x: -1700, filter: 'blur(14px)', duration: 0.42, ease: 'power3.in' }, 4.15);
+      window.__timelines['hook'] = tl;
+    })();
+  </script>
+</template>

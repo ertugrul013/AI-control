@@ -1,0 +1,10 @@
+node_modules
+.next
+coverage
+playwright-report
+test-results
+.env
+*.tsbuildinfo
+next-env.d.ts
+.superpowers
+.DS_Store

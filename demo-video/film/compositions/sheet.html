@@ -1,0 +1,124 @@
+<template>
+  <style>
+    @font-face { font-family: 'Public Sans'; font-weight: 400; src: url('assets/fonts/public-sans-400.woff2') format('woff2'); }
+    @font-face { font-family: 'Public Sans'; font-weight: 600; src: url('assets/fonts/public-sans-600.woff2') format('woff2'); }
+    #root { position: absolute; inset: 0; background: #ffffff; font-family: 'Public Sans', sans-serif; color: #1c2430; overflow: hidden; }
+    #sheet-file { position: absolute; left: 160px; top: 104px; font-size: 28px; color: #566170; }
+    #sheet-grid { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; }
+    .sheet-cell {
+      position: absolute; height: 78px; display: flex; align-items: center; padding: 0 20px;
+      font-size: 30px; border-bottom: 1px solid #d8dde3; border-right: 1px solid #d8dde3; background: #ffffff; white-space: nowrap;
+    }
+    .sheet-head { height: 64px; background: #f2f4f6; font-weight: 600; font-size: 28px; }
+    .sheet-q { font-weight: 600; font-size: 34px; }
+    #sheet-title { position: absolute; left: 1250px; top: 380px; width: 560px; font-size: 76px; font-weight: 600; line-height: 1.15; letter-spacing: -0.01em; }
+    #sheet-strip { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; }
+    .sheet-seg { position: absolute; top: 470px; width: 193px; height: 120px; border: 2px solid #9aa3ad; background-image: repeating-linear-gradient(135deg, #9aa3ad 0 3px, transparent 3px 9px); }
+    #sheet-mark, #sheet-sub { opacity: 0; }
+    #sheet-mark { position: absolute; left: 160px; top: 300px; font-size: 128px; font-weight: 600; letter-spacing: -0.02em; line-height: 1; }
+    #sheet-sub { position: absolute; left: 164px; top: 640px; font-size: 46px; color: #566170; }
+  </style>
+  <div id="root" data-composition-id="sheet" data-width="1920" data-height="1080">
+    <div id="sheet-table">
+      <p id="sheet-file">ai-tools-final-v3.xlsx</p>
+      <div id="sheet-grid"></div>
+    </div>
+    <h2 id="sheet-title"><span class="sw">8</span> <span class="sw">AI</span> <span class="sw">tools.</span><br /><span class="sw">Zero</span> <span class="sw">answers.</span></h2>
+    <div id="sheet-strip"></div>
+    <p id="sheet-mark"><span class="sl">A</span><span class="sl">I</span><span class="sl">C</span><span class="sl">o</span><span class="sl">n</span><span class="sl">t</span><span class="sl">r</span><span class="sl">o</span><span class="sl">l</span></p>
+    <p id="sheet-sub"><span class="ss">Open-source</span> <span class="ss">AI</span> <span class="ss">governance</span> <span class="ss">for</span> <span class="ss">SMEs</span></p>
+  </div>
+  <script>
+    (function () {
+      // The demo register, alphabetical, as someone would list it in a spreadsheet.
+      const rows = [
+        ['ChatGPT', 'Marketing'],
+        ['Customer chatbot', 'Customer service'],
+        ['CV screening tool', 'HR'],
+        ['DeepL', 'Sales'],
+        ['GIS image model', 'Operations'],
+        ['Grammarly', 'Marketing'],
+        ['HR sentiment analysis', 'HR'],
+        ['Microsoft 365 Copilot', 'IT'],
+      ];
+      const cols = [
+        { x: 160, w: 380, label: 'Tool' },
+        { x: 540, w: 280, label: 'Department' },
+        { x: 820, w: 180, label: 'Risk' },
+        { x: 1000, w: 180, label: 'Trained?' },
+      ];
+      const grid = document.getElementById('sheet-grid');
+      const cell = (x, y, w, text, cls, id) => {
+        const el = document.createElement('div');
+        el.className = 'sheet-cell ' + cls;
+        if (id) el.id = id;
+        Object.assign(el.style, { left: x + 'px', top: y + 'px', width: w + 'px' });
+        el.textContent = text;
+        grid.appendChild(el);
+        return el;
+      };
+      cols.forEach((c) => cell(c.x, 170, c.w, c.label, 'sheet-head'));
+      const risk = [];
+      const trained = [];
+      rows.forEach(([tool, dept], i) => {
+        const y = 234 + i * 78;
+        cell(160, y, 380, tool, 'sheet-plain');
+        cell(540, y, 280, dept, 'sheet-plain');
+        risk.push(cell(820, y, 180, '?', 'sheet-q', 'sheet-risk-' + i));
+        trained.push(cell(1000, y, 180, '?', 'sheet-q sheet-trained', 'sheet-trained-' + i));
+      });
+      const strip = document.getElementById('sheet-strip');
+      const segs = rows.map((_, i) => {
+        const el = document.createElement('div');
+        el.className = 'sheet-seg';
+        el.id = 'sheet-seg-' + i;
+        el.style.left = 160 + i * 201 + 'px';
+        strip.appendChild(el);
+        return el;
+      });
+
+      const tl = gsap.timeline({ paused: true });
+      const qs = [...risk, ...trained].map((c) => c.firstChild);
+      // "?" is a text node; wrap it so it can scale on its own.
+      [...risk, ...trained].forEach((c) => { c.innerHTML = '<span class="sheet-qm">?</span>'; });
+      const marks = gsap.utils.toArray('#sheet-grid .sheet-qm');
+
+      tl.fromTo('#sheet-table', { x: 260, filter: 'blur(16px)' }, { x: 0, filter: 'blur(0px)', duration: 0.4, ease: 'expo.out' }, 0);
+      gsap.set(marks, { opacity: 0, scale: 0.5 });
+      gsap.set(segs, { opacity: 0 });
+      gsap.set(['#sheet-mark .sl', '#sheet-sub .ss', '#sheet-title .sw'], { opacity: 0 });
+      marks.forEach((m, i) => {
+        const row = i % 8;
+        const col = Math.floor(i / 8);
+        tl.to(m, { opacity: 1, scale: 1, duration: 0.18, ease: 'expo.out' }, 0.35 + row * 0.07 + col * 0.12);
+      });
+      gsap.utils.toArray('#sheet-title .sw').forEach((w, i) => {
+        tl.fromTo(w, { opacity: 0, filter: 'blur(6px)' }, { opacity: 1, filter: 'blur(0px)', duration: 0.13, ease: 'none' }, 1.25 + i * 0.12);
+      });
+
+      // The question marks of the Risk column become the register's strip, still unassessed.
+      tl.to(['#sheet-title', '#sheet-file', '#sheet-grid .sheet-head', '#sheet-grid .sheet-plain', '#sheet-grid .sheet-trained'], { opacity: 0, filter: 'blur(8px)', duration: 0.22, ease: 'power2.in' }, 3.0);
+      tl.to(risk.map((c) => c.firstChild), { opacity: 0, duration: 0.12 }, 3.05);
+      risk.forEach((c, i) => {
+        const at = 3.1 + i * 0.035;
+        gsap.set(c, { transformOrigin: '0 0' });
+        tl.to(c, { x: 160 + i * 201 - 820, y: 470 - (234 + i * 78), scaleX: 193 / 180, scaleY: 120 / 78, borderColor: '#9aa3ad', duration: 0.6, ease: 'power3.inOut' }, at);
+        tl.to(segs[i], { opacity: 1, duration: 0.12, ease: 'none' }, at + 0.5);
+        tl.to(c, { opacity: 0, duration: 0.12, ease: 'none' }, at + 0.52);
+      });
+      tl.set(['#sheet-mark', '#sheet-sub'], { opacity: 1 }, 3.9);
+      gsap.utils.toArray('#sheet-mark .sl').forEach((l, i) => {
+        tl.fromTo(l, { opacity: 0.3, filter: 'blur(4px)' }, { opacity: 1, filter: 'blur(0px)', duration: 0.15, ease: 'none' }, 3.95 + i * 0.06);
+      });
+      gsap.utils.toArray('#sheet-sub .ss').forEach((w, i) => {
+        tl.fromTo(w, { opacity: 0, filter: 'blur(6px)' }, { opacity: 1, filter: 'blur(0px)', duration: 0.13, ease: 'none' }, 4.35 + i * 0.09);
+      });
+
+      // Zoom through Grammarly's segment, the one that stays unassessed.
+      tl.to(['#sheet-mark', '#sheet-sub'], { opacity: 0, filter: 'blur(8px)', duration: 0.2, ease: 'power2.in' }, 6.25);
+      gsap.set('#sheet-strip', { transformOrigin: '1261.5px 530px' });
+      tl.to('#sheet-strip', { scale: 16, duration: 0.6, ease: 'power3.in' }, 6.4);
+      window.__timelines['sheet'] = tl;
+    })();
+  </script>
+</template>

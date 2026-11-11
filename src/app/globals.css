@@ -1,0 +1,128 @@
+@import 'tailwindcss';
+
+/* AIControl tokens. Dark mode keeps the tier hues, lightened one step, on #12181F. */
+:root {
+  --ink: #1c2430;
+  --muted: #566170;
+  --paper: #ffffff;
+  --shelf: #f2f4f6;
+  --rule: #d8dde3;
+  --action: #1f4e79;
+  --action-ink: #ffffff;
+  --prohibited: #8e1b2b;
+  --high: #b4690e;
+  --limited: #2f6690;
+  --minimal: #5e8566;
+  --unassessed: #9aa3ad;
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ink: #e6eaee;
+    --muted: #a7b1bc;
+    --paper: #12181f;
+    --shelf: #1b232d;
+    --rule: #2f3a47;
+    --action: #8dbbe4;
+    --action-ink: #12181f;
+    --prohibited: #d8616f;
+    --high: #dc9440;
+    --limited: #6ea6d0;
+    --minimal: #8fb897;
+    --unassessed: #9aa3ad;
+  }
+}
+
+@theme inline {
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-paper: var(--paper);
+  --color-shelf: var(--shelf);
+  --color-rule: var(--rule);
+  --color-action: var(--action);
+  --color-action-ink: var(--action-ink);
+  --color-prohibited: var(--prohibited);
+  --color-high: var(--high);
+  --color-limited: var(--limited);
+  --color-minimal: var(--minimal);
+  --color-unassessed: var(--unassessed);
+  --font-sans: 'Public Sans', system-ui, sans-serif;
+  --text-sm: 14px;
+  --text-xs: 13px;
+  --text-base: 16px;
+  --text-xl: 22px;
+}
+
+@layer base {
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-size: 14px;
+    line-height: 1.5;
+    font-variant-numeric: tabular-nums;
+  }
+  h1 {
+    font-size: 22px;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+  h2 {
+    font-size: 16px;
+    font-weight: 600;
+  }
+  h3 {
+    font-weight: 600;
+  }
+  a {
+    color: var(--action);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  :focus-visible {
+    outline: 2px solid var(--action);
+    outline-offset: 2px;
+  }
+  input[type='checkbox'],
+  input[type='radio'] {
+    accent-color: var(--action);
+    width: 16px;
+    height: 16px;
+  }
+
+  /* Register tables: row dividers instead of zebra stripes, left-aligned text, row hover. */
+  table.data {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    text-align: left;
+  }
+  table.data th {
+    background: var(--shelf);
+    font-weight: 600;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--rule);
+    white-space: nowrap;
+  }
+  table.data td {
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--rule);
+    vertical-align: top;
+  }
+  table.data tbody tr:hover td {
+    background: var(--shelf);
+  }
+}
+
+/* Not assessed: a diagonal hatch, so a gap looks like a gap. */
+.hatch {
+  background-image: repeating-linear-gradient(135deg, var(--unassessed) 0 2px, transparent 2px 5px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+}

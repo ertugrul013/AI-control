@@ -1,0 +1,55 @@
+<template>
+  <style>
+    @font-face { font-family: 'Public Sans'; font-weight: 400; src: url('assets/fonts/public-sans-400.woff2') format('woff2'); }
+    @font-face { font-family: 'Public Sans'; font-weight: 600; src: url('assets/fonts/public-sans-600.woff2') format('woff2'); }
+    #root { position: absolute; inset: 0; background: #ffffff; font-family: 'Public Sans', sans-serif; color: #1c2430; overflow: hidden; }
+    #detail-cam { position: absolute; left: 0; top: 0; width: 1920px; height: 1374px; }
+    #detail-cam img { position: absolute; left: 0; top: 0; width: 1920px; height: 1374px; }
+    .detail-veil { position: absolute; left: 226px; width: 790px; background: #ffffff; }
+  </style>
+  <div id="root" data-composition-id="detail" data-width="1920" data-height="1080">
+    <div id="detail-cam">
+      <img id="detail-shot" src="assets/screens/detail-full.png" alt="CV screening tool: why high and its actions" />
+      <div id="detail-veils"></div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const W = 1920, H = 1080, IH = 1374;
+      const frame = (px, py, s, sx = W / 2, sy = H / 2) => ({
+        scale: s,
+        x: Math.min(0, Math.max(W - W * s, sx - px * s)),
+        y: Math.min(0, Math.max(H - IH * s, sy - py * s)),
+      });
+      // The eight generated actions, measured on the page; veiled, then shown one by one.
+      const rows = [743, 788, 832, 876, 921, 965, 1009, 1054];
+      const veils = document.getElementById('detail-veils');
+      const veilEls = rows.map((y, i) => {
+        const el = document.createElement('div');
+        el.className = 'detail-veil';
+        el.id = 'detail-veil-' + i;
+        Object.assign(el.style, { top: y - 2 + 'px', height: '44px' });
+        veils.appendChild(el);
+        return el;
+      });
+
+      const tl = gsap.timeline({ paused: true });
+      const badge = { scale: 3.6, x: 960 - 458 * 3.6, y: 0 };
+      const page = { scale: 1.6, x: 140 - 232 * 1.6, y: 540 - 381 * 1.6 };
+      const why = frame(620, 608, 2.2);
+      const actions = frame(620, 918, 2.0);
+
+      gsap.set('#detail-cam', { transformOrigin: '0 0', ...badge });
+      tl.to('#detail-cam', { ...page, duration: 0.9, ease: 'expo.out' }, 0);
+      tl.to('#detail-cam', { ...why, duration: 0.55, ease: 'power2.inOut' }, 1.35);
+      tl.to('#detail-cam', { ...actions, duration: 0.6, ease: 'power2.inOut' }, 2.75);
+      veilEls.forEach((v, i) => {
+        tl.to(v, { opacity: 0, duration: 0.14, ease: 'none' }, 3.35 + i * 0.09);
+      });
+      // Vertical whip out to the employee's to-do list.
+      tl.to('#detail-cam', { y: actions.y - 900, duration: 0.35, ease: 'power3.in' }, 5.05);
+      tl.to('#detail-cam', { filter: 'blur(14px)', duration: 0.3, ease: 'power3.in' }, 5.1);
+      window.__timelines['detail'] = tl;
+    })();
+  </script>
+</template>

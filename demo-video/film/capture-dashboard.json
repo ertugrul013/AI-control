@@ -1,0 +1,19 @@
+{
+  "summary": "8 AI systems registered. 3 need action, 1 is not assessed.",
+  "countdown": "High-risk obligations apply from 2 Dec 2027 (386 days).",
+  "strip": [
+    "HR suite sentiment analysis: Prohibited",
+    "CV screening tool: High",
+    "Customer chatbot: Limited",
+    "Microsoft 365 Copilot: Limited",
+    "ChatGPT: Minimal",
+    "DeepL: Minimal",
+    "GIS image recognition model: Minimal",
+    "Grammarly: Not assessed"
+  ],
+  "coverage": [
+    "Assessed\t7/8\t88%",
+    "Training completed\t4/7\t57%",
+    "Policy acknowledged\t3/4\t75%"
+  ]
+}

@@ -1,0 +1,77 @@
+<template>
+  <style>
+    @font-face { font-family: 'Public Sans'; font-weight: 400; src: url('assets/fonts/public-sans-400.woff2') format('woff2'); }
+    @font-face { font-family: 'Public Sans'; font-weight: 600; src: url('assets/fonts/public-sans-600.woff2') format('woff2'); }
+    #root { position: absolute; inset: 0; background: #ffffff; font-family: 'Public Sans', sans-serif; color: #1c2430; overflow: hidden; font-variant-numeric: tabular-nums; }
+    #payoff-cam { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; }
+    #payoff-cam img { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; }
+    #payoff-summary { position: absolute; left: 160px; top: 190px; width: 1700px; font-size: 56px; line-height: 1.4; font-weight: 600; white-space: nowrap; }
+    #payoff-countdown { position: absolute; left: 160px; top: 290px; font-size: 34px; line-height: 1.5; white-space: nowrap; }
+    #payoff-strip { position: absolute; left: 160px; top: 430px; width: 1600px; height: 160px; }
+    .payoff-seg { position: absolute; top: 0; width: 193px; height: 160px; background-image: repeating-linear-gradient(135deg, #9aa3ad 0 3px, transparent 3px 9px); border: 2px solid #9aa3ad; }
+    .payoff-fill { position: absolute; inset: -2px; }
+    #payoff-legend { position: absolute; left: 160px; top: 640px; display: flex; gap: 52px; font-size: 30px; white-space: nowrap; }
+    #payoff-legend span.item { display: inline-flex; align-items: center; gap: 12px; }
+    #payoff-legend i { display: inline-block; width: 22px; height: 22px; }
+    #payoff-legend b { font-weight: 600; margin-left: 6px; }
+    .t-p { background: #8e1b2b; } .t-h { background: #b4690e; } .t-l { background: #2f6690; } .t-m { background: #5e8566; }
+    .t-n { border: 2px solid #9aa3ad; background-image: repeating-linear-gradient(135deg, #9aa3ad 0 2px, transparent 2px 5px); }
+    #payoff-cam, #payoff-summary .pw, #payoff-countdown { opacity: 0; }
+  </style>
+  <div id="root" data-composition-id="payoff" data-width="1920" data-height="1080">
+    <div id="payoff-cam"><img id="payoff-dashboard" src="assets/screens/dashboard.png" alt="AIControl dashboard" /></div>
+    <p id="payoff-summary"><span class="pw">8</span> <span class="pw">AI</span> <span class="pw">systems</span> <span class="pw">registered.</span> <span class="pw">3</span> <span class="pw">need</span> <span class="pw">action,</span> <span class="pw">1</span> <span class="pw">is</span> <span class="pw">not</span> <span class="pw">assessed.</span></p>
+    <p id="payoff-countdown">High-risk obligations apply from 2 Dec 2027 (386 days).</p>
+    <div id="payoff-strip">
+      <div class="payoff-seg" id="payoff-seg-0" style="left: 0px"><div class="payoff-fill t-p"></div></div>
+      <div class="payoff-seg" id="payoff-seg-1" style="left: 201px"><div class="payoff-fill t-h"></div></div>
+      <div class="payoff-seg" id="payoff-seg-2" style="left: 402px"><div class="payoff-fill t-l"></div></div>
+      <div class="payoff-seg" id="payoff-seg-3" style="left: 603px"><div class="payoff-fill t-l"></div></div>
+      <div class="payoff-seg" id="payoff-seg-4" style="left: 804px"><div class="payoff-fill t-m"></div></div>
+      <div class="payoff-seg" id="payoff-seg-5" style="left: 1005px"><div class="payoff-fill t-m"></div></div>
+      <div class="payoff-seg" id="payoff-seg-6" style="left: 1206px"><div class="payoff-fill t-m"></div></div>
+      <div class="payoff-seg" id="payoff-seg-7" style="left: 1407px"></div>
+    </div>
+    <p id="payoff-legend">
+      <span class="item" id="payoff-lg-p"><i class="t-p"></i>Prohibited<b>1</b></span>
+      <span class="item" id="payoff-lg-h"><i class="t-h"></i>High<b>1</b></span>
+      <span class="item" id="payoff-lg-l"><i class="t-l"></i>Limited<b>2</b></span>
+      <span class="item" id="payoff-lg-m"><i class="t-m"></i>Minimal<b>3</b></span>
+      <span class="item" id="payoff-lg-n"><i class="t-n"></i>Not assessed<b>1</b></span>
+    </p>
+  </div>
+  <script>
+    (function () {
+      const tl = gsap.timeline({ paused: true });
+      const fills = gsap.utils.toArray('#payoff-strip .payoff-fill');
+      const legend = ['#payoff-lg-p', '#payoff-lg-h', '#payoff-lg-l', '#payoff-lg-m', '#payoff-lg-n'];
+      // Which segment completes each legend item.
+      const legendAt = [0, 1, 3, 6, 7];
+      const fillAt = (i) => 0.45 + i * 0.16;
+
+      gsap.set('#payoff-cam', { transformOrigin: '0 0', scale: 1.4, x: -225, y: 0 });
+      gsap.set(['#payoff-summary', '#payoff-countdown', '#payoff-strip', '#payoff-legend'], { transformOrigin: '0 0' });
+      gsap.set(fills, { transformOrigin: '50% 100%', scaleY: 0 });
+      gsap.set(legend, { opacity: 0 });
+      tl.fromTo('#payoff-strip', { filter: 'blur(8px)' }, { filter: 'blur(0px)', duration: 0.13, ease: 'none' }, 0);
+
+      // The unassessed strip from the opening fills in, tier by tier; Grammarly stays a gap.
+      fills.forEach((f, i) => tl.to(f, { scaleY: 1, duration: 0.24, ease: 'expo.out' }, fillAt(i)));
+      legendAt.forEach((seg, i) => tl.to(legend[i], { opacity: 1, duration: 0.15, ease: 'none' }, fillAt(seg) + 0.1));
+      gsap.utils.toArray('#payoff-summary .pw').forEach((w, i) => {
+        tl.fromTo(w, { opacity: 0, filter: 'blur(6px)' }, { opacity: 1, filter: 'blur(0px)', duration: 0.13, ease: 'none' }, 1.4 + i * 0.067);
+      });
+      tl.fromTo('#payoff-countdown', { opacity: 0, filter: 'blur(8px)' }, { opacity: 1, filter: 'blur(0px)', duration: 0.18, ease: 'none' }, 2.2);
+
+      // Carried back into the real dashboard, to the places they hold there.
+      const carry = { duration: 0.75, ease: 'power2.inOut' };
+      tl.to('#payoff-summary', { x: 100 - 160, y: 101 - 190, scale: (22 * 1.4) / 56, ...carry }, 4.9);
+      tl.to('#payoff-countdown', { x: 100 - 160, y: 150 - 290, scale: (14 * 1.4) / 34, ...carry }, 4.93);
+      tl.to('#payoff-strip', { x: 100 - 160, y: 212.8 - 430, scaleX: 1545.6 / 1600, scaleY: 50.4 / 160, ...carry }, 4.96);
+      tl.to('#payoff-legend', { x: 100 - 160, y: 274 - 640, scale: (13 * 1.4) / 30, ...carry }, 5.0);
+      tl.to('#payoff-cam', { opacity: 1, duration: 0.3, ease: 'none' }, 5.45);
+      tl.to(['#payoff-summary', '#payoff-countdown', '#payoff-strip', '#payoff-legend'], { opacity: 0, duration: 0.15, ease: 'none' }, 5.7);
+      window.__timelines['payoff'] = tl;
+    })();
+  </script>
+</template>

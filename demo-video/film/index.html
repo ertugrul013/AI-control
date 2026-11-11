@@ -1,0 +1,62 @@
+<!doctype html>
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"color-ground","type":"color","label":"Background","default":"#FFFFFF"},
+    {"id":"color-shelf","type":"color","label":"Shelf","default":"#F2F4F6"},
+    {"id":"color-ink","type":"color","label":"Text","default":"#1C2430"},
+    {"id":"color-accent","type":"color","label":"Accent","default":"#1F4E79"},
+    {"id":"font-display","type":"string","label":"Display font","default":"Public Sans"}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+    <style>
+      :root {
+        --color-ground: #ffffff;
+        --color-shelf: #f2f4f6;
+        --color-ink: #1c2430;
+        --color-accent: #1f4e79;
+        --font-display: 'Public Sans';
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: var(--color-ground);
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="45.6"
+      data-width="1920"
+      data-height="1080"
+      data-motion-blur="on"
+    >
+      <div id="hook" data-composition-id="hook" data-composition-src="compositions/hook.html" data-start="0" data-duration="4.6" data-track-index="1" data-track-kind="graphics" data-width="1920" data-height="1080"></div>
+      <div id="sheet" data-composition-id="sheet" data-composition-src="compositions/sheet.html" data-start="4.6" data-duration="7" data-track-index="1" data-track-kind="graphics" data-width="1920" data-height="1080"></div>
+      <div id="register" data-composition-id="register" data-composition-src="compositions/register.html" data-start="11.6" data-duration="4.6" data-track-index="1" data-track-kind="graphics" data-width="1920" data-height="1080"></div>
+      <div id="classify" data-composition-id="classify" data-composition-src="compositions/classify.html" data-start="16.2" data-duration="7" data-track-index="1" data-track-kind="graphics" data-width="1920" data-height="1080"></div>
+      <div id="detail" data-composition-id="detail" data-composition-src="compositions/detail.html" data-start="23.2" data-duration="5.4" data-track-index="1" data-track-kind="graphics" data-width="1920" data-height="1080"></div>
+      <div id="todos" data-composition-id="todos" data-composition-src="compositions/todos.html" data-start="28.6" data-duration="4" data-track-index="1" data-track-kind="graphics" data-width="1920" data-height="1080"></div>
+      <div id="payoff" data-composition-id="payoff" data-composition-src="compositions/payoff.html" data-start="32.6" data-duration="6.6" data-track-index="1" data-track-kind="graphics" data-width="1920" data-height="1080"></div>
+      <div id="end" data-composition-id="end" data-composition-src="compositions/end.html" data-start="39.2" data-duration="6.4" data-track-index="1" data-track-kind="graphics" data-width="1920" data-height="1080"></div>
+    </div>
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines['main'] = gsap.timeline({ paused: true });
+    </script>
+  </body>
+</html>

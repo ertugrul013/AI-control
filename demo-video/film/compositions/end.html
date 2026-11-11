@@ -1,0 +1,54 @@
+<template>
+  <style>
+    @font-face { font-family: 'Public Sans'; font-weight: 400; src: url('assets/fonts/public-sans-400.woff2') format('woff2'); }
+    @font-face { font-family: 'Public Sans'; font-weight: 600; src: url('assets/fonts/public-sans-600.woff2') format('woff2'); }
+    #root { position: absolute; inset: 0; background: #ffffff; font-family: 'Public Sans', sans-serif; color: #1c2430; overflow: hidden; }
+    #end-claim { position: absolute; left: 160px; top: 430px; font-size: 104px; font-weight: 600; letter-spacing: -0.015em; }
+    #end-lockup { position: absolute; left: 0; top: 400px; width: 1920px; display: flex; justify-content: center; align-items: center; gap: 30px; }
+    #end-mark { position: relative; width: 166px; height: 70px; }
+    .end-seg { position: absolute; top: 0; width: 28px; height: 70px; }
+    .end-seg.n { border: 2px solid #9aa3ad; background-image: repeating-linear-gradient(135deg, #9aa3ad 0 2px, transparent 2px 6px); }
+    #end-word { font-size: 92px; font-weight: 600; letter-spacing: -0.02em; line-height: 1; }
+    #end-sub { position: absolute; left: 0; top: 548px; width: 1920px; text-align: center; font-size: 36px; color: #566170; }
+    #end-cta-row { position: absolute; left: 0; top: 640px; width: 1920px; display: flex; justify-content: center; }
+    #end-cta { font-family: 'IBM Plex Mono', monospace; font-size: 40px; color: #1f4e79; border: 2px solid #d8dde3; border-radius: 4px; padding: 16px 32px; }
+    #end-sub .es, #end-cta { opacity: 0; }
+  </style>
+  <div id="root" data-composition-id="end" data-width="1920" data-height="1080">
+    <h2 id="end-claim"><span class="ew">Know</span> <span class="ew">your</span> <span class="ew">AI,</span> <span class="ew">tool</span> <span class="ew">by</span> <span class="ew">tool.</span></h2>
+    <div id="end-lockup">
+      <div id="end-mark" aria-hidden="true">
+        <div class="end-seg" id="end-seg-0" style="left: 0; background: #8e1b2b"></div>
+        <div class="end-seg" id="end-seg-1" style="left: 34px; background: #b4690e"></div>
+        <div class="end-seg" id="end-seg-2" style="left: 68px; background: #2f6690"></div>
+        <div class="end-seg" id="end-seg-3" style="left: 102px; background: #5e8566"></div>
+        <div class="end-seg n" id="end-seg-4" style="left: 136px"></div>
+      </div>
+      <p id="end-word">AIControl</p>
+    </div>
+    <p id="end-sub"><span class="es">Free,</span> <span class="es">open</span> <span class="es">source</span> <span class="es">and</span> <span class="es">self-hosted</span></p>
+    <div id="end-cta-row"><p id="end-cta">docker compose up</p></div>
+  </div>
+  <script>
+    (function () {
+      const tl = gsap.timeline({ paused: true });
+      const segs = gsap.utils.toArray('#end-mark .end-seg');
+      gsap.set(segs, { clipPath: 'inset(100% 0 0 0)' });
+      gsap.set('#end-word', { clipPath: 'inset(0 100% 0 0)' });
+
+      gsap.utils.toArray('#end-claim .ew').forEach((w, i) => {
+        tl.fromTo(w, { opacity: 0, filter: 'blur(6px)' }, { opacity: 1, filter: 'blur(0px)', duration: 0.13, ease: 'none' }, i * 0.09);
+      });
+      tl.to('#end-claim', { opacity: 0, filter: 'blur(8px)', duration: 0.22, ease: 'power2.in' }, 2.45);
+
+      // The mark is the risk strip in small: it fills segment by segment, then the name wipes in.
+      segs.forEach((s, i) => tl.to(s, { clipPath: 'inset(0% 0 0 0)', duration: 0.2, ease: 'expo.out' }, 2.75 + i * 0.09));
+      tl.to('#end-word', { clipPath: 'inset(0 0% 0 0)', duration: 0.45, ease: 'power2.out' }, 3.2);
+      gsap.utils.toArray('#end-sub .es').forEach((w, i) => {
+        tl.fromTo(w, { opacity: 0, filter: 'blur(6px)' }, { opacity: 1, filter: 'blur(0px)', duration: 0.13, ease: 'none' }, 3.7 + i * 0.07);
+      });
+      tl.fromTo('#end-cta', { opacity: 0, filter: 'blur(8px)' }, { opacity: 1, filter: 'blur(0px)', duration: 0.18, ease: 'none' }, 4.05);
+      window.__timelines['end'] = tl;
+    })();
+  </script>
+</template>

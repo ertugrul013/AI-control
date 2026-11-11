@@ -1,0 +1,43 @@
+<template>
+  <style>
+    @font-face { font-family: 'Public Sans'; font-weight: 400; src: url('assets/fonts/public-sans-400.woff2') format('woff2'); }
+    @font-face { font-family: 'Public Sans'; font-weight: 600; src: url('assets/fonts/public-sans-600.woff2') format('woff2'); }
+    #root { position: absolute; inset: 0; background: #ffffff; font-family: 'Public Sans', sans-serif; color: #1c2430; overflow: hidden; }
+    #register-cam { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; }
+    #register-cam img { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; }
+    #register-title { position: absolute; left: 152px; top: 830px; font-size: 80px; font-weight: 600; letter-spacing: -0.01em; }
+  </style>
+  <div id="root" data-composition-id="register" data-width="1920" data-height="1080">
+    <div id="register-cam"><img id="register-shot" src="assets/screens/register.png" alt="AIControl AI register" /></div>
+    <h2 id="register-title"><span class="rw">Register</span> <span class="rw">every</span> <span class="rw">AI</span> <span class="rw">tool</span></h2>
+  </div>
+  <script>
+    (function () {
+      const W = 1920, H = 1080;
+      // Camera on a 1920 x 1080 capture: put point (px, py) at screen (sx, sy), kept inside the image.
+      const frame = (px, py, s, sx = W / 2, sy = H / 2) => ({
+        scale: s,
+        x: Math.min(0, Math.max(W - W * s, sx - px * s)),
+        y: Math.min(0, Math.max(H - H * s, sy - py * s)),
+      });
+      const tl = gsap.timeline({ paused: true });
+      // Arrive inside Grammarly's "Not assessed" swatch, then pull back to the whole register.
+      const swatch = frame(950, 466, 9);
+      const wide = { scale: 1.45, x: 120 - 232 * 1.45, y: -40 * 1.45 };
+      const row = frame(560, 354.5, 2.6);
+      const through = frame(300, 354, 6);
+      gsap.set('#register-cam', { transformOrigin: '0 0', ...swatch, filter: 'blur(10px)' });
+      tl.to('#register-cam', { ...wide, duration: 0.95, ease: 'expo.out' }, 0);
+      tl.to('#register-cam', { filter: 'blur(0px)', duration: 0.3, ease: 'power2.out' }, 0);
+      gsap.utils.toArray('#register-title .rw').forEach((w, i) => {
+        tl.fromTo(w, { opacity: 0, filter: 'blur(6px)' }, { opacity: 1, filter: 'blur(0px)', duration: 0.13, ease: 'none' }, 0.85 + i * 0.07);
+      });
+      tl.to('#register-title', { opacity: 0, filter: 'blur(8px)', duration: 0.2, ease: 'power2.in' }, 2.75);
+      tl.to('#register-cam', { ...row, duration: 0.55, ease: 'power2.inOut' }, 2.9);
+      // The CV screening tool row becomes the next world.
+      tl.to('#register-cam', { ...through, duration: 0.5, ease: 'power3.in' }, 4.0);
+      tl.to('#register-cam', { filter: 'blur(10px)', duration: 0.3, ease: 'power3.in' }, 4.2);
+      window.__timelines['register'] = tl;
+    })();
+  </script>
+</template>
